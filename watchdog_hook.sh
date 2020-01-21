@@ -21,6 +21,9 @@ set_gateway_ip() {
   THE_GW=$(route -n | grep 'UG'  | awk '{print $2}')
   export THE_GW=$(route -n | grep 'UG'  | awk '{print $2}')
 }
+delete_ping_line() {
+  sed -i '/ping/d' /etc/watchdog.conf
+}
 create_config_line() {
   CONFIG_LINE="ping=$THE_GW"
 }
@@ -64,6 +67,7 @@ watchdog_setup_add() {
 
   if [ $GATEWAY_EXISTENCE -ne 0 ]; then
     set_gateway_ip
+    delete_ping_line
     create_config_line
     log_config_line
     update_watchdog_config
